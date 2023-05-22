@@ -6,16 +6,17 @@ const { Server } = require('socket.io');
 
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.sendFile('index.html');
+});
+
 const server = http.createServer(app);
 
-const users = {}
+const users = {};
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  }
-});
+const io = socketIO(server);
+
+io.origins('*:*');
 
 io.on('connection', (socket) =>{
   
@@ -35,6 +36,8 @@ io.on('connection', (socket) =>{
   });
 });
 
-server.listen(3001, ()=>{
+const port = process.env.PORT || 3001;
+
+server.listen(port, ()=>{
   console.log("SERVER RUNNING");
-})
+});
